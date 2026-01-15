@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the number</title>
+
+    <style>
+        body{
+            background: #6ec6ff;
+            font-family: 'Press Start 2P' cursive;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .box{
+            background: #ffcc00;
+            width: 150px;
+            padding: 20px;
+            margin: 20px auto;
+            border: 4px solid #b8860b;
+            border-radius: 10px;
+            font-size: 22px;
+        }
+
+        .box.jump{
+            animation: jump 0.5s;
+        }
+
+        @keyframes jump {
+            0% {transform: translateY(0);}
+            50% {transform: translateY(-15px);}
+            100% {transform: translateY(0);}
+        }
+
+        input,button{
+            font-family: inherit;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        button{
+            cursor: pointer;
+            background: #ff5733;
+            border: 3px solid black;
+            color: white;
+        }
+
+        .msg{
+          margin-top: 20px;
+          font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mario Will Guess Your Number!</h1>
+    <p>Enter a number between  <b>1-100</b></p>
+
+    <input type="number" id="userNum" placeholder="Enter Your Number">
+    <br>
+    <button onclick="startGame()">Start</button>
+    <div class="box" id="marioBox">?</div>
+
+    <div class="msg" id="msg">Waiting...</div>
+    <p id="attempts">Attempts: 0</p>
+
+    <script>
+        let min, max, attempts, number, interval;
+
+        function startGame(){
+            number = parseInt(document.getElementById("userNum").value);    
+
+            if(isNaN(number) || number<1 || number>100){
+                alert("Enter a valid number between 1 and 100!");
+                return;
+            }
+
+            min = 1;
+            max = 100;
+            attempts = 0;
+
+            clearInterval(interval);
+
+            interval = setInterval(guessNumber, 1000);
+        }
+
+        function guessNumber(){
+            attempts++;
+            document.getElementById("attempts").innerText = "Attempts:" + attempts;
+
+            let guess = Math.floor((min + max) / 2);
+
+            let box = document.getElementById("marioBox");
+            box.textContent = guess;
+            box.classList.add("jump");
+
+            setTimeout(() => box.classList.remove("jump"), 400 );
+
+            let msg = document.getElementById("msg");   
+
+            if(guess === number){
+                msg.innerHTML = "🎉 Mario Guessed Correct!";
+                clearInterval(interval);
+            } else if(guess<number){
+                msg.innerHTML = guess + "is too LOW!";
+                min = guess + 1;
+            } else{
+                msg.innerHTML = guess + "is too HIGH!";
+                max = guess - 1;
+            }
+        }
+    </script>
+</body>
+</html>
